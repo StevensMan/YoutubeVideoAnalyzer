@@ -1,9 +1,9 @@
 import datetime
 from datetime import datetime, timedelta
-
 from googleapiclient.discovery import build
 
-API_KEY = 'AIzaSyCga4YKPtFcYzp839VNDKn6nwDATTJP7yI'  # 'YOUR_YOUTUBE_API_KEY'
+# create your API key at https://console.cloud.google.com/apis
+API_KEY =  'YOUR_YOUTUBE_API_KEY'
 CHANNEL_ID = 'UCPY6gj8G7dqwPxg9KwHrj5Q'  # Суспільне Новини 'TARGET_CHANNEL_ID'
 
 def get_videos_by_date_range(start_date, end_date):
