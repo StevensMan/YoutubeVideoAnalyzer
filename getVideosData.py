@@ -43,7 +43,6 @@ def get_yesterday_videos():
 
     return videos
 
-
 get_yesterday_videos()
 
 
