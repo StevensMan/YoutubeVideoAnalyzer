@@ -1,3 +1,4 @@
+import os
 from youtube_transcript_api import YouTubeTranscriptApi
 from youtube_transcript_api._errors import (TranscriptsDisabled, VideoUnavailable, NoTranscriptFound)
 
@@ -44,7 +45,7 @@ def download_video_captions_all_languages(video_id):
         return None
 
 
-def save_captions_by_language(captions_by_language, video_id):
+def save_captions_by_language(captions_by_language, channel, video_id, title, published_at):
     """
     Saves captions for all languages to separate text files.
 
@@ -54,16 +55,22 @@ def save_captions_by_language(captions_by_language, video_id):
     """
     if captions_by_language:
         for language_code, captions in captions_by_language.items():
-            output_file = f"results/{video_id}_{language_code}_captions.txt"
+            results_directory = f"results/{channel}"
+            if not os.path.exists(results_directory):
+                os.makedirs(results_directory)
+                print(f"Directory created: {results_directory}")
+
+            output_file = f"results/{channel}/{video_id}_{language_code}_captions.txt"
             with open(output_file, "w", encoding="utf-8") as file:
+                file.write(f"{title}\nhttps://www.youtube.com/watch?v={video_id}\nPublished At: {published_at}\n\n")
                 for entry in captions:
                     file.write(f"[{entry['start']:.2f}] {entry['text']}\n")
             print(f"Captions for language '{language_code}' saved to {output_file}")
     else:
         print("No captions to save.")
 
-def download_captions(video_id):
+def download_captions(channel, video_id, title, published_at):
     captions_by_language = download_video_captions_all_languages(video_id)
     if captions_by_language:
-        save_captions_by_language(captions_by_language, video_id)
+        save_captions_by_language(captions_by_language, channel, video_id, title, published_at)
 

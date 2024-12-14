@@ -1,14 +1,57 @@
 import getCaptions
 import getVideosData
 
+import json
+from datetime import datetime, timedelta
+
+def load_config(config_file):
+    """
+    Load configuration from a JSON file.
+
+    Args:
+        config_file (str): Path to the configuration file.
+
+    Returns:
+        dict: Parsed configuration parameters.
+    """
+    with open(config_file, "r") as file:
+        return json.load(file)
+
+def display_config_parameters(config):
+    """
+    Display configuration parameters.
+
+    Args:
+        config (dict): Configuration parameters.
+    """
+    print("YouTube API Key:", config.get("YouTubeAPIKey"))
+    print("List of YouTube Channel IDs:", config.get("YouTubeChannelIDs"))
+    print("Start Date:", config.get("StartDate"))
+    print("Number of Days:", config.get("NumberOfDays"))
+
 
 def main():
-    videos = getVideosData.get_yesterday_videos()
 
-    # Print the result
-    for video in videos:
-        print(f"Title: {video['title']}, Video ID: {video['videoId']}, Published At: {video['publishedAt']}")
-        getCaptions.download_captions(video['videoId'])
+    config_file = "config.json"  # Path to your configuration file
+    config = load_config(config_file)
+
+    # Display parameters from configuration file
+    display_config_parameters(config)
+
+    getVideosData.API_KEY = config.get("YouTubeAPIKey")
+
+    channels = config.get("YouTubeChannelIDs")
+    for channel in channels:
+        try:
+            # Fetch the transcript for this language
+            videos = getVideosData.get_videos(config.get("StartDate"), config.get("NumberOfDays"), channel )
+            # Print the result
+            for video in videos:
+                print(f"Title: {video['title']}, Video ID: {video['videoId']}, Published At: {video['publishedAt']}")
+                getCaptions.download_captions(channel, video['videoId'], video['title'], video['publishedAt'])
+        except Exception as e:
+            print(f"Failed to fetch videos for channel {channel}: {e}")
+
 
 if __name__ == "__main__":
     main()
