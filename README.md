@@ -12,13 +12,17 @@ Most parameters required to run this program are stored in *config.json* file. B
         "YouTubeAPIKey": "AIzaSyCga4YKPtFcYzp839VNDKn6nwDATTJP7y",  
         "YouTubeChannelIDs": ["UCpakYOycn3O5W5S50l-0VIg","UCPY6gj8G7dqwPxg9KwHrj5Q" ],  
         "StartDate": "2024-11-18",  
-        "NumberOfDays": 3  
+        "NumberOfDays": 3, 
+        "IncludeTimestamps": false,
+        "DumpToSingleFile": true
     }
 
  - *YouTubeAPIKey* -  personal key should be obtained from https://console.cloud.google.com/apis/credentials
  - *YouTubeChannelIDs* - list of channels to pull video captions from, single or multiple channels.  To get a channel ID for a channel use tool similar to https://yt-link.com/stats Enter YouTube user name and click on down arrow symbol to expand channel ID
  - *StartDate* - UTC date of first video to pull, format *2024-11-18*
- - *NumberOfDays* - should be self explainatory
+ - *NumberOfDays* - number of days since start date
+ -  *IncludeTimestamps* - can add a timestamp in the transcript to easy identify moment in the video 
+ - *DumptToSingleFile* - combines all results for the run to single file per channel
 
 ### Example of output file:
 

@@ -7,24 +7,41 @@ from googleapiclient.discovery import build
 API_KEY = ''
 
 def get_videos_by_date_range(start_date, end_date, channel):
+    """
+    Retrieve videos from a channel by iterating over each day in the date range.
+
+    Args:
+        start_date (datetime): The start date for the search.
+        end_date (datetime): The end date for the search.
+        channel (str): YouTube channel ID.
+
+    Returns:
+        list: A list of videos with their video ID, title, and published date.
+    """
     youtube = build('youtube', 'v3', developerKey=API_KEY)
+    all_videos = []
 
+    current_date = start_date
+    while current_date < end_date:
+        next_date = current_date + timedelta(days=1)
+        print(f"Fetching videos for: {current_date.date()} - {next_date.date()}")
+        request = youtube.search().list(
+            part="snippet",
+            channelId=channel,
+            publishedAfter=current_date.isoformat() + "Z",
+            publishedBefore=next_date.isoformat() + "Z",
+            maxResults=50
+        )
+        response = request.execute()
+        videos = [
+            {"videoId": item["id"]["videoId"], "title": item["snippet"]["title"],
+             "publishedAt": item["snippet"]["publishedAt"]}
+            for item in response.get("items", []) if item["id"]["kind"] == "youtube#video"]
 
-    request = youtube.search().list(
-        part="snippet",
-        channelId=channel,
-        publishedAfter=start_date.isoformat() + "Z",
-        publishedBefore=end_date.isoformat() + "Z",
-        maxResults=50
-    )
+        all_videos.extend(videos)
+        current_date = next_date
 
-    response = request.execute()
-    videos = [
-        {"videoId": item["id"]["videoId"], "title": item["snippet"]["title"],
-         "publishedAt": item["snippet"]["publishedAt"]}
-        for item in response.get("items", []) if item["id"]["kind"] == "youtube#video"]
-    return videos
-
+    return all_videos
 
 def calculate_date_range(start_date_str, number_of_days):
     """

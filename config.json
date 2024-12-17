@@ -1,6 +1,8 @@
 {
     "YouTubeAPIKey": "AIzaSyCga4YKPtFcYzp839VNDKn6nwDATTJP7yI",
-    "YouTubeChannelIDs": ["UCpakYOycn3O5W5S50l-0VIg","UCPY6gj8G7dqwPxg9KwHrj5Q" ],
-    "StartDate": "2024-11-18",
-    "NumberOfDays": 3
+    "YouTubeChannelIDs": ["UCPY6gj8G7dqwPxg9KwHrj5Q" ],
+    "StartDate": "2024-11-01",
+    "NumberOfDays": 30,
+    "IncludeTimestamps": false,
+    "DumpToSingleFile": true
 }
