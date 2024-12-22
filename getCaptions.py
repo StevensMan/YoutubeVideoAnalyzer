@@ -89,16 +89,26 @@ def download_captions(channel, video_id, title, published_at, include_timestamps
 
 def combine_transcripts_from_files(output_directory, combined_output_file):
     """
-    Combine all transcript files in the output directory into a single file.
+    Combine all transcript files in the output directory into a single file in order of creation.
 
     Args:
         output_directory (str): Path to the directory containing transcript files.
         combined_output_file (str): Path to the combined output file.
     """
+    # Get a list of files ending with '_captions.txt' along with their creation times
+    files = [
+        (filename, os.path.getctime(os.path.join(output_directory, filename)))
+        for filename in os.listdir(output_directory)
+        if filename.endswith("_captions.txt")
+    ]
+
+    # Sort files by creation time
+    sorted_files = sorted(files, key=lambda x: x[1])
+
+    # Write combined content to the output file
     with open(combined_output_file, "w", encoding="utf-8") as combined_file:
-        for filename in os.listdir(output_directory):
-            if filename.endswith("_captions.txt"):
-                video_id = filename.replace("_captions.txt", "")
-                combined_file.write(f"\n=== Transcripts for video: {video_id} ===\n")
-                with open(os.path.join(output_directory, filename), "r", encoding="utf-8") as file:
-                    combined_file.write(file.read())
+        for filename, _ in sorted_files:
+            video_id = filename.replace("_captions.txt", "")
+            combined_file.write(f"\n=== Transcripts for video: {video_id} ===\n")
+            with open(os.path.join(output_directory, filename), "r", encoding="utf-8") as file:
+                combined_file.write(file.read())
